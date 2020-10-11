@@ -209,6 +209,9 @@ func (w *Window) OpenAndWait() {
 	version := gl.GoStr(gl.GetString(gl.VERSION))
 	log.Println("OpenGL version", version)
 
+	renderer := gl.GoStr(gl.GetString(gl.RENDERER))
+	log.Println("OpenGL renderer", renderer)
+
 	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 	gl.Enable(gl.CULL_FACE)
 	gl.FrontFace(gl.CCW)
@@ -356,6 +359,7 @@ func (w *Window) OpenAndWait() {
 	gl.ActiveTexture(gl.TEXTURE0)
 	gl.BindTexture(gl.TEXTURE_2D, textureID)
 	gl.BindVertexArray(vao)
+	gl.BindBuffer(gl.ARRAY_BUFFER, vbo)
 
 	// send window height and width to shader
 	uniformLocationWW := gl.GetUniformLocation(shaderProgramID, gl.Str("ww\x00"))
@@ -397,7 +401,6 @@ func (w *Window) OpenAndWait() {
 				w.updateObject(i, &objects[i], vertices)
 			}
 
-			gl.BindBuffer(gl.ARRAY_BUFFER, vbo)
 			gl.BufferSubData(gl.ARRAY_BUFFER, 0, sizeOfVertices, gl.Ptr(vertices))
 
 			accumulator -= dt
