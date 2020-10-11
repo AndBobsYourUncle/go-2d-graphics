@@ -7,4 +7,4 @@ Loads one texture and uses it to render several sprites multiple thousand times 
 
 # License and dependencies
 MIT license (see file LICENSE for copy).
-Project uses GLFW, and go-gl but non of them are included here. [Fruit icons](http://www.flaticon.com/packs/gastronomy-set).
+Project uses GLFW, and go-gl but none of them are included here. [Fruit icons](http://www.flaticon.com/packs/gastronomy-set).
