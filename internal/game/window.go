@@ -19,7 +19,7 @@ import (
 )
 
 const (
-	OBJECT_COUNT = 500
+	ObjectCount = 500
 )
 
 type Texture struct {
@@ -258,12 +258,12 @@ func (w *Window) OpenAndWait() {
 		gl.UNSIGNED_BYTE,
 		gl.Ptr(rgba.Pix))
 
-	vertices := make([]int16, OBJECT_COUNT*12)
-	uvs := make([]float32, OBJECT_COUNT*12)
+	vertices := make([]int16, ObjectCount*12)
+	uvs := make([]float32, ObjectCount*12)
 
 	objects := make([]Object, 0)
 
-	for i := 0; i < OBJECT_COUNT; i++ {
+	for i := 0; i < ObjectCount; i++ {
 		texIndex := rand.Intn(len(possibleTextures) - 1)
 
 		objects = append(objects, Object{
@@ -273,7 +273,7 @@ func (w *Window) OpenAndWait() {
 		})
 	}
 
-	for i := 0; i < OBJECT_COUNT; i++ {
+	for i := 0; i < ObjectCount; i++ {
 		// top right
 		vertices[i*12] = objects[i].x + int16(objects[i].texture.width)
 		vertices[i*12+1] = objects[i].y
@@ -333,10 +333,10 @@ func (w *Window) OpenAndWait() {
 	gl.BindVertexArray(vao)
 
 	sizeOfInt16 := int(unsafe.Sizeof(int16(0)))
-	sizeOfVertices := int(unsafe.Sizeof(vertices) + unsafe.Sizeof([OBJECT_COUNT * 12]int16{}))
+	sizeOfVertices := int(unsafe.Sizeof(vertices) + unsafe.Sizeof([ObjectCount * 12]int16{}))
 
 	sizeOfFloat32 := int(unsafe.Sizeof(float32(0)))
-	sizeOfUvs := int(unsafe.Sizeof(uvs) + unsafe.Sizeof([OBJECT_COUNT * 12]float32{}))
+	sizeOfUvs := int(unsafe.Sizeof(uvs) + unsafe.Sizeof([ObjectCount * 12]float32{}))
 
 	gl.BindBuffer(gl.ARRAY_BUFFER, vbo)
 	gl.BufferData(gl.ARRAY_BUFFER, sizeOfVertices, gl.Ptr(vertices), gl.DYNAMIC_DRAW)
@@ -393,7 +393,7 @@ func (w *Window) OpenAndWait() {
 		for accumulator >= dt {
 			glfw.PollEvents()
 
-			for i := 0; i < OBJECT_COUNT; i++ {
+			for i := 0; i < ObjectCount; i++ {
 				w.updateObject(i, &objects[i], vertices)
 			}
 
@@ -406,7 +406,7 @@ func (w *Window) OpenAndWait() {
 
 		gl.ClearColor(0.2, 0.25, 0.3, 1)
 		gl.Clear(gl.COLOR_BUFFER_BIT)
-		gl.DrawArrays(gl.TRIANGLES, 0, OBJECT_COUNT*6)
+		gl.DrawArrays(gl.TRIANGLES, 0, ObjectCount*6)
 
 		window.SwapBuffers()
 	}
@@ -424,6 +424,7 @@ func (w *Window) updateObject(idx int, object *Object, vertices []int16) {
 	object.x += int16(rand.Intn(5) - 2)
 	object.y += int16(rand.Intn(5) - 2)
 
+	// Simple collision detection. Make sure no sprites exit the window borders
 	if object.x < 5 {
 		object.x = 5
 	}
@@ -499,10 +500,10 @@ func compileShader(source string, shaderType uint32) (uint32, error) {
 		var logLength int32
 		gl.GetShaderiv(shader, gl.INFO_LOG_LENGTH, &logLength)
 
-		log := strings.Repeat("\x00", int(logLength+1))
-		gl.GetShaderInfoLog(shader, logLength, nil, gl.Str(log))
+		shaderLog := strings.Repeat("\x00", int(logLength+1))
+		gl.GetShaderInfoLog(shader, logLength, nil, gl.Str(shaderLog))
 
-		return 0, fmt.Errorf("failed to compile %v: %v", source, log)
+		return 0, fmt.Errorf("failed to compile %v: %v", source, shaderLog)
 	}
 
 	return shader, nil
