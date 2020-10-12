@@ -336,10 +336,10 @@ func (w *Window) OpenAndWait() {
 	gl.BindVertexArray(vao)
 
 	sizeOfInt16 := int(unsafe.Sizeof(int16(0)))
-	sizeOfVertices := int(unsafe.Sizeof(vertices) + unsafe.Sizeof([ObjectCount * 12]int16{}))
+	sizeOfVertices := ObjectCount * 12 * sizeOfInt16
 
 	sizeOfFloat32 := int(unsafe.Sizeof(float32(0)))
-	sizeOfUvs := int(unsafe.Sizeof(uvs) + unsafe.Sizeof([ObjectCount * 12]float32{}))
+	sizeOfUvs := ObjectCount * 12 * sizeOfFloat32
 
 	gl.BindBuffer(gl.ARRAY_BUFFER, vbo)
 	gl.BufferData(gl.ARRAY_BUFFER, sizeOfVertices, gl.Ptr(vertices), gl.DYNAMIC_DRAW)
